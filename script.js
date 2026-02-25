@@ -25,23 +25,40 @@ function showSymbol(op) {
     return op;
 }
 
-function updateScreen() {
-    const display = document.getElementById('displayLine');
-    const history = document.getElementById('historyLine');
-    const status = document.getElementById('statusLine');
+function updateScreen () {
+  const display = document.getElementById('displayLine')
+  const history = document.getElementById('historyLine')
+  const status = document.getElementById('statusLine')
 
-    display.textContent = typedNumberText
+  display.textContent = typedNumberText
 }
 
 
 
 function pressNumber (digit) {
-setStatus('');
-    if (typedNumberText=== '0') {
-        typedNumberText = digit
-    } else {
-        typedNumberText += digit
+  setStatus('')
+  if (typedNumberText === '0') {
+    typedNumberText = digit
+  } else {
+    typedNumberText = typedNumberText + digit
+  }
+  updateScreen()
+}
+
+setStatus('')
+
+function pressOperator (op) {
+    if (typedNumberText === '' && storedNumber === null) {
+        setStatus('Type a number first')
     }
 
-    updateScreen()
+    if (storedNumber === null) {
+        storedNumber = Number(typedNumberText)
+       currentOperator = op 
+       historyParts = [storedNumber, currentOperator]
+       typedNumberText = ''
+       updateScreen();
+       
+    }
+
 }
