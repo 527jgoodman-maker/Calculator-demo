@@ -5,7 +5,7 @@ let typedNumberText = ''
 let storedNumber = null 
 
 //the operator currently selected (+ - * /)
-let currentOperator = null
+let currentOperator = ''
 
 //used only for displaying the history line
 let historyParts = []
@@ -14,14 +14,14 @@ let historyParts = []
 // HELPER FUNCTIONS
 //------------------------------
 
-function setStatus (message) {
-    document.getElementById('status').textContent = message;
+function setstatusLine (message) {
+    document.getElementById('statusLine').textContent = message;
 }
 
 function showSymbol(op) {
     if (op === '*') return '×';
     if (op === '/') return '÷';
-    if (op === '-') return '&#x2212;';
+    if (op === '-') return '-';
     return op;
 }
 
@@ -30,13 +30,33 @@ function updateScreen () {
   const history = document.getElementById('historyLine')
   const status = document.getElementById('statusLine')
 
-  display.textContent = typedNumberText
+   if (typedNumberText !== '') {
+    display.textContent = typedNumberText
+  } else {
+    display.textContent = '0'
+  
 }
 
+  if (historyParts.length === 0) {
+    history.textContent = ''
+  } 
+  if (historyParts.length === 1) {
+    history.textContent = historyParts[0]
+  } 
+  if (historyParts.length === 2) {
+    history.textContent = historyParts[0] + ' ' + showSymbol(historyParts[1])
+  } 
+  if (historyParts.length === 3) {
+    history.textContent = historyParts[0] + ' ' + showSymbol(historyParts[1]) + ' ' + historyParts[2]
+  } 
 
+  if (status.textContent === '') {
+    status.textContent = 'Ready'
+  }
+}
 
 function pressNumber (digit) {
-  setStatus('')
+  setstatusLine('')
   if (typedNumberText === '0') {
     typedNumberText = digit
   } else {
@@ -45,20 +65,39 @@ function pressNumber (digit) {
   updateScreen()
 }
 
-setStatus('')
+setstatusLine('')
 
 function pressOperator (op) {
-    if (typedNumberText === '' && storedNumber === null) {
-        setStatus('Type a number first')
+  
+  if (typedNumberText === '' && storedNumber === null) {
+        setstatusLine('Type a number first')
+      
     }
 
-    if (storedNumber === null) {
+    if (storedNumber === null) { 
         storedNumber = Number(typedNumberText)
        currentOperator = op 
        historyParts = [storedNumber, currentOperator]
        typedNumberText = ''
-       updateScreen();
-       
+       updateScreen()
     }
 
+    if (typedNumberText !== ''){
+      const secondNumber = typedNumberText
+
+      if (currentOperator === '/' && secondNumber === '0') {
+        setstatusLine('Never divide by zero ever again!')
+        return
+      }
+    }
+}
+
+function pressClear () {
+    typedNumberText = ''
+    storedNumber = null
+    currentOperator = ''
+    historyParts = []
+    
+    setstatusLine('Cleared')
+    updateScreen()
 }
