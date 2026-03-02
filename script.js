@@ -90,6 +90,28 @@ function pressOperator (op) {
         return
       }
     }
+
+  let result = storedNumber
+
+
+    if (currentOperator === '+') {
+    result = storedNumber + secondNumber
+  } else if (currentOperator === '-') {
+    result = storedNumber - secondNumber
+  } else if (currentOperator === '*') {
+    result = storedNumber * secondNumber
+  } else if (currentOperator === '/') {
+    result = storedNumber / secondNumber
+  }
+
+  storedNumber = result
+  currentOperator = op
+
+  historyParts = [String(storedNumber), currentOperator, String(secondNumber)]
+
+  typedNumberText = '' 
+  updateScreen()
+  return
 }
 
 function pressClear () {
@@ -100,4 +122,36 @@ function pressClear () {
     
     setstatusLine('Cleared')
     updateScreen()
+}
+
+function calculate () {
+  setstatusLine('')
+
+  if (storedNumber === null || currentOperator === '' || typedNumberText === '') {
+    setstatusLine('Enter a complete expression before calculating')
+    updateScreen()
+    return
+  }
+
+  const secondNumber = Number(typedNumberText)
+  let result = storedNumber
+
+  historyParts = [String(storedNumber), currentOperator, String(secondNumber)]
+
+  if (currentOperator === '+') {
+    result = storedNumber + secondNumber
+  } else if (currentOperator === '-') {
+    result = storedNumber - secondNumber
+  } else if (currentOperator === '*') {
+    result = storedNumber * secondNumber
+  } else if (currentOperator === '/') {
+    result = storedNumber / secondNumber
+  }
+
+  storedNumber = result
+  currentOperator = ''
+  typedNumberText = ''
+
+  setstatusLine('Calculated')
+  updateScreen()
 }
